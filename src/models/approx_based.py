@@ -7,7 +7,6 @@ from src.topology import PersistentHomologyCalculation #AlephPersistenHomologyCa
 from src.models import submodules
 from src.models.base import AutoencoderModel
 
-
 class TopologicallyRegularizedAutoencoder(AutoencoderModel):
     """Topologically regularized autoencoder."""
 
@@ -84,13 +83,51 @@ class TopologicallyRegularizedAutoencoder(AutoencoderModel):
             loss,
             loss_components
         )
+class PersistentHomologyCalculation:
+    def __call__(self, matrix):
+
+        n_vertices = matrix.shape[0]
+        uf = UnionFind(n_vertices)
+
+        triu_indices = np.triu_indices_from(matrix)
+        edge_weights = matrix[triu_indices]
+        edge_indices = np.argsort(edge_weights, kind='stable')
+
+        # 1st dimension: 'source' vertex index of edge
+        # 2nd dimension: 'target' vertex index of edge
+        persistence_pairs = []
+
+        for edge_index, edge_weight in \
+                zip(edge_indices, edge_weights[edge_indices]):
+
+            u = triu_indices[0][edge_index]
+            v = triu_indices[1][edge_index]
+
+            younger_component = uf.find(u)
+            older_component = uf.find(v)
+
+            # Not an edge of the MST, so skip it
+            if younger_component == older_component:
+                continue
+            elif younger_component > older_component:
+                uf.merge(v, u)
+            else:
+                uf.merge(u, v)
+
+            if u < v:
+                persistence_pairs.append((u, v))
+            else:
+                persistence_pairs.append((v, u))
+
+        # Return empty cycles component
+        return np.array(persistence_pairs), np.array([])
+
 
     def encode(self, x):
         return self.autoencoder.encode(x)
 
     def decode(self, z):
         return self.autoencoder.decode(z)
-
 
 class TopologicalSignatureDistance(nn.Module):
     """Topological signature."""

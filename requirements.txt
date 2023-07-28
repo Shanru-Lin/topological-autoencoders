@@ -3,15 +3,15 @@ backcall==0.1.0
 boto3==1.9.225
 botocore==1.12.225
 certifi==2019.6.16
-cffi==1.12.3
 chardet==3.0.4
 colorama==0.4.1
 cycler==0.10.0
+cffi==1.12.3
 decorator==4.4.0
 docopt==0.6.2
 docutils==0.15.2
-gitdb2==2.0.5
 GitPython==3.0.2
+gitdb2==2.0.5
 GPUtil==1.4.0
 idna==2.8
 ipykernel==5.1.2
@@ -26,8 +26,8 @@ jupyter-core==4.5.0
 kiwisolver==1.1.0
 llvmlite==0.29.0
 matplotlib==3.1.1
-MulticoreTSNE==0.1
 munch==2.3.2
+MulticoreTSNE==0.1
 numba==0.45.1
 numpy==1.17.2
 packaging==19.1
